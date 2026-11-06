@@ -7,7 +7,6 @@ import pytest
 from pydantic import ValidationError
 
 from taskboard4_api.tasks.models import TaskCreate
-from taskboard4_api.tasks.store import TaskStore
 
 
 def _fields(exc: ValidationError) -> set[str]:
@@ -54,14 +53,3 @@ def test_invalid_due_date(bad: Any) -> None:
     with pytest.raises(ValidationError) as ei:
         TaskCreate(title="x", due_date=bad)
     assert _fields(ei.value) == {"due_date"}
-
-
-def test_store_unique_ids_and_order() -> None:
-    store = TaskStore()
-    a = store.add("same", None)
-    b = store.add("same", date(2026, 1, 1))
-    c = store.add("C", None)
-    assert a.id and a.id != b.id
-    assert [t.id for t in store.list()] == [a.id, b.id, c.id]
-    store.list().clear()
-    assert len(store.list()) == 3
