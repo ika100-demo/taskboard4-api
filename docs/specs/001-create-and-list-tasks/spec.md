@@ -1,7 +1,7 @@
 ---
 spec_id: 001-create-and-list-tasks
 title: Create and list tasks
-status: done
+status: approved
 priority: P1
 shape: service-python
 ---
@@ -29,13 +29,12 @@ As an API caller, I want to list all tasks, so that I can see everything recorde
 - **AC-001.7** Given the service is running, when a caller sends `POST /tasks` with a body that is not valid JSON, then the response is `422` and no task is added.
 - **AC-001.8** Given no task has been created since the service started, when a caller sends `GET /tasks`, then the response is `200` with an empty JSON array `[]`.
 - **AC-001.9** Given tasks "A", "B" and "C" were created in that order, when a caller sends `GET /tasks`, then the response is `200` with a JSON array of three objects in creation order, each with the same `id`, `title` and `due_date` as returned when it was created. (smoke)
-- **AC-001.10** Given tasks were created, when the service restarts and a caller sends `GET /tasks`, then the response is `200` with an empty JSON array `[]` (tasks are kept in memory only).
+- ~~**AC-001.10** Given tasks were created, when the service restarts and a caller sends `GET /tasks`, then the response is `200` with an empty JSON array `[]` (tasks are kept in memory only).~~ withdrawn 2026-11-06: tasks are now kept in Postgres and survive a restart, see spec 002-keep-tasks-in-postgres-answer-503-and (AC-002.1).
 - **AC-001.11** Given the service is running, when a caller sends `POST /tasks` with `{"title": "  Buy milk  "}`, then the response is `201` with `title` equal to `"Buy milk"`, and `GET /tasks` returns that task with `title` equal to `"Buy milk"`.
 - **AC-001.12** Given today is after 2020-01-01, when a caller sends `POST /tasks` with `{"title": "Overdue", "due_date": "2020-01-01"}`, then the response is `201` with `due_date` equal to `"2020-01-01"`.
 
 ## Non-goals
 
-- Persisting tasks across restarts or sharing them between several running instances of the service.
 - Reading a single task, updating, completing or deleting tasks.
 - Filtering, sorting options, searching or paginating the list.
 - Users, authentication or per-user task lists: every caller sees every task.
@@ -60,3 +59,6 @@ As an API caller, I want to list all tasks, so that I can see everything recorde
 - 2026-11-06 approved
 - 2026-11-06 building
 - 2026-11-06 done
+- 2026-11-06 draft: amend: withdraw AC-001.10 and the non-goal against persistence; superseded by spec 002 (system spec 001)
+- 2026-11-06 amended: superseded in part by component spec 002-keep-tasks-in-postgres-answer-503-and (slice of system spec ika100-demo/taskboard4-gitops:001-persistent-tasks-in-postgres-with-a-web); withdrew AC-001.10 (tasks now kept in Postgres, AC-002.1) and dropped the non-goal against persistence and multiple instances. All other criteria unchanged; their tests must keep passing against Postgres (AC-002.3). Decision: the approved system spec and its plan.
+- 2026-11-06 approved; the old plan is plan.v1.md
