@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterator
-
 import pytest
 from fastapi.testclient import TestClient
 
@@ -11,17 +9,9 @@ LONG = "x" * 200
 
 
 @pytest.fixture()
-def tclient() -> Iterator[TestClient]:
-    """A client with an empty task store injected."""
-    from taskboard4_api.main import app
-    from taskboard4_api.tasks.store import TaskStore, get_task_store
-
-    store = TaskStore()
-    app.dependency_overrides[get_task_store] = lambda: store
-    try:
-        yield TestClient(app)
-    finally:
-        app.dependency_overrides.pop(get_task_store, None)
+def tclient(client: TestClient) -> TestClient:
+    """A client over a fresh Postgres database (conftest `client`)."""
+    return client
 
 
 def _names_field(response, field: str) -> bool:
@@ -99,24 +89,6 @@ def test_list_in_creation_order(tclient: TestClient) -> None:  # AC-001.9
     assert r.status_code == 200
     assert r.json() == created
     assert [t["title"] for t in r.json()] == ["A", "B", "C"]
-
-
-def test_restart_empties_list() -> None:  # AC-001.10
-    from taskboard4_api.main import app
-    from taskboard4_api.tasks.store import TaskStore, get_task_store
-
-    first, second = TaskStore(), TaskStore()
-    try:
-        app.dependency_overrides[get_task_store] = lambda: first
-        c = TestClient(app)
-        assert c.post("/tasks", json={"title": "Keep"}).status_code == 201
-        assert len(c.get("/tasks").json()) == 1
-        app.dependency_overrides[get_task_store] = lambda: second
-        r = c.get("/tasks")
-        assert r.status_code == 200
-        assert r.json() == []
-    finally:
-        app.dependency_overrides.pop(get_task_store, None)
 
 
 def test_title_is_trimmed(tclient: TestClient) -> None:  # AC-001.11
