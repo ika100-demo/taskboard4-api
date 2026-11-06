@@ -23,6 +23,7 @@ tasks:
     covers: [AC-002.4, AC-002.5, AC-002.6, AC-002.8, AC-002.9, AC-002.10, AC-002.11, AC-002.12, AC-002.13, AC-002.14]
     parallel_safe: true
     depends_on: [t1]
+    done: true
   - id: t4
     title: Image smoke start with a throwaway Postgres (image-smoke, ci-extra)
     files: [scripts/image_smoke.sh, devbox.json, .claude/project-notes.md, README.md]
