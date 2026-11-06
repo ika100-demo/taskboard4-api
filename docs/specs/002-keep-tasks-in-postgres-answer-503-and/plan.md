@@ -10,6 +10,7 @@ tasks:
     covers: [AC-002.5, AC-002.6, AC-002.7, AC-002.10, AC-002.11, AC-002.12, AC-002.13, AC-002.14]
     parallel_safe: true
     depends_on: []
+    done: true
   - id: t2
     title: Make TaskStore Postgres-backed behind the unchanged routes
     files: [src/taskboard4_api/tasks/store.py, src/taskboard4_api/tasks/api.py, src/taskboard4_api/tasks/__init__.py, tests/test_task_models.py]
