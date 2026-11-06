@@ -13,9 +13,8 @@ LONG = "x" * 200
 @pytest.fixture()
 def tclient() -> Iterator[TestClient]:
     """A client with an empty task store injected."""
-    from taskboard4_api.tasks.store import TaskStore, get_task_store
-
     from taskboard4_api.main import app
+    from taskboard4_api.tasks.store import TaskStore, get_task_store
 
     store = TaskStore()
     app.dependency_overrides[get_task_store] = lambda: store
@@ -103,9 +102,8 @@ def test_list_in_creation_order(tclient: TestClient) -> None:  # AC-001.9
 
 
 def test_restart_empties_list() -> None:  # AC-001.10
-    from taskboard4_api.tasks.store import TaskStore, get_task_store
-
     from taskboard4_api.main import app
+    from taskboard4_api.tasks.store import TaskStore, get_task_store
 
     first, second = TaskStore(), TaskStore()
     try:
