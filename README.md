@@ -10,10 +10,12 @@ Owned by @ika100-demo.
 devbox shell                  # enter the dev environment
 devbox run quality            # ruff + mypy
 devbox run test               # pytest with coverage
-devbox run -- uv run uvicorn taskboard4_api.main:app --reload --port 8080
+DATABASE_URL=postgres://localhost:5432/taskboard devbox run -- uv run uvicorn taskboard4_api.main:app --reload --port 8080
 ```
 
-Then `curl http://localhost:8080/ping`.
+The app needs a Postgres database (`DATABASE_URL`) and refuses to start without it. Then `curl http://localhost:8080/health`.
+
+`devbox run image-build && devbox run image-smoke` starts the container image next to a throwaway Postgres and checks it (needs Docker).
 
 ## Conventions
 

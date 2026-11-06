@@ -32,7 +32,9 @@
       "deps-bump":    "bash scripts/deps.sh bump \"$@\"",
       "ci":             "devbox run quality && devbox run test && devbox run security && if grep -qs '\"ci-extra\"[[:space:]]*:' devbox.json; then devbox run ci-extra; fi",
       "image-build":    "docker build -t taskboard4-api:scan .",
-      "image-scan":     "trivy image --severity CRITICAL,HIGH --format table taskboard4-api:scan"
+      "image-scan":     "trivy image --severity CRITICAL,HIGH --format table taskboard4-api:scan",
+      "image-smoke":    "bash scripts/image_smoke.sh",
+      "ci-extra":       "devbox run image-build && devbox run image-smoke"
     }
   }
 }
