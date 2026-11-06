@@ -9,6 +9,12 @@ Configuration is read exclusively from environment variables. Defaults below are
 | `PORT` | `8080` | HTTP port the service listens on. |
 | `LOG_LEVEL` | `INFO` | Logging level. One of `DEBUG`, `INFO`, `WARNING`, `ERROR`. |
 
+## Database
+
+| Variable | Default | Description |
+|---|---|---|
+| `DATABASE_URL` | _(none — required)_ | Postgres connection URL, scheme `postgres://` or `postgresql://`; injected by the `postgres` resource. The service logs `config_missing` and exits at startup when it is unset or blank. Never logged. No `PG*` variables are read. |
+
 ## Observability
 
 | Variable | Default | Description |
