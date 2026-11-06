@@ -1,7 +1,7 @@
 ---
 spec_id: 002-keep-tasks-in-postgres-answer-503-and
 title: Keep tasks in Postgres, answer 503 and report not ready while the database is down
-status: approved
+status: building
 priority: P1
 shape: service-python
 parent: ika100-demo/taskboard4-gitops:001-persistent-tasks-in-postgres-with-a-web
@@ -157,3 +157,4 @@ This spec supersedes component spec 001-create-and-list-tasks where they conflic
 - 2026-11-06 created
 - 2026-11-06 amended: answered the open question on a missing `DATABASE_URL` (refuse to start); added AC-002.14 and the section "Decisions taken during the ship".
 - 2026-11-06 approved
+- 2026-11-06 building
