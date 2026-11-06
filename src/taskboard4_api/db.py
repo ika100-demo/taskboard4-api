@@ -9,6 +9,7 @@ from concurrent.futures import ThreadPoolExecutor
 from typing import TypeVar
 
 import psycopg
+import structlog
 from fastapi import Request
 
 from taskboard4_api.migrations import ensure_schema
@@ -167,8 +168,8 @@ class Database:
     def _discard(conn: psycopg.Connection) -> None:
         try:
             conn.close()
-        except Exception:  # noqa: BLE001, S110 - best effort
-            pass
+        except Exception as exc:  # noqa: BLE001 - best effort
+            structlog.get_logger().debug("connection_close_failed", error=type(exc).__name__)
 
 
 def get_database(request: Request) -> Database:
