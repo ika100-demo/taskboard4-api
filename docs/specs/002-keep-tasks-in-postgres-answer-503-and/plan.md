@@ -31,6 +31,7 @@ tasks:
     covers: [AC-002.13, AC-002.14]
     parallel_safe: false
     depends_on: [t2, t3]
+    done: true
 human_steps:
   - If the repo variable CI_RUNNER points at a self-hosted runner, make sure that runner has a working Docker daemon (the test job starts Postgres with testcontainers, the ci-extra job builds and smoke-starts the image).
   - Merge the taskboard4-gitops slice (postgres resource, uses postgres on taskboard4-api, 2 dev replicas) before this PR, so the new pods find DATABASE_URL on their first dev rollout.
