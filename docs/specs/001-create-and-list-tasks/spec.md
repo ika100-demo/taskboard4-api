@@ -1,7 +1,7 @@
 ---
 spec_id: 001-create-and-list-tasks
 title: Create and list tasks
-status: approved
+status: done
 priority: P1
 shape: service-python
 ---
@@ -58,3 +58,5 @@ As an API caller, I want to list all tasks, so that I can see everything recorde
 - 2026-11-06 created
 - 2026-11-06 amended: answered all open questions; added AC-001.11 (title trimming) and AC-001.12 (past due dates accepted); task cap moved to Non-goals.
 - 2026-11-06 approved
+- 2026-11-06 building
+- 2026-11-06 done
