@@ -1,6 +1,6 @@
 [project]
 name = "taskboard4-api"
-version = "0.1.0"
+version = "0.1.1.dev0"
 description = "Task API"
 readme = "README.md"
 requires-python = ">=3.12"
