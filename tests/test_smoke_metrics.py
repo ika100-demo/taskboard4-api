@@ -6,10 +6,14 @@ so it runs in every environment (no `@pytest.mark.writes`, #474).
 
 from __future__ import annotations
 
+import time
 import urllib.error
 import urllib.request
 
 import pytest
+
+_MAX_ATTEMPTS = 20
+_SLEEP_SECONDS = 0.25
 
 
 def _get(url: str) -> int:
@@ -23,10 +27,20 @@ def _get(url: str) -> int:
 @pytest.mark.smoke
 def test_requests_are_counted_in_metrics(smoke_base_url: str) -> None:
     """AC-104.4: /health and an unknown path appear with method, route and status_code labels."""
-    assert _get(smoke_base_url + "/health") == 200
-    assert _get(smoke_base_url + "/no-such-path-for-smoke") == 404
-    with urllib.request.urlopen(smoke_base_url + "/metrics", timeout=10) as response:
-        text = response.read().decode()
+    health_line = 'http_requests_total{method="GET",route="/health",status_code="200"}'
+    unmatched_line = 'http_requests_total{method="GET",route="unmatched",status_code="404"}'
+    text = ""
+    # Several replicas sit behind the URL and each counts only its own requests (per-process
+    # counters), so repeat the requests and the scrape until one instance has counted both.
+    for attempt in range(_MAX_ATTEMPTS):
+        assert _get(smoke_base_url + "/health") == 200
+        assert _get(smoke_base_url + "/no-such-path-for-smoke") == 404
+        with urllib.request.urlopen(smoke_base_url + "/metrics", timeout=10) as response:
+            text = response.read().decode()
+        if health_line in text and unmatched_line in text:
+            break
+        if attempt < _MAX_ATTEMPTS - 1:
+            time.sleep(_SLEEP_SECONDS)
     assert 'http_requests_total{method="GET",route="/health",status_code="200"}' in text
     assert 'http_requests_total{method="GET",route="unmatched",status_code="404"}' in text
     assert "/no-such-path-for-smoke" not in text
